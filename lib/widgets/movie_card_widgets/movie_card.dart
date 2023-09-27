@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:muvime/widgets/movie_card_widgets/title.dart';
+import 'package:provider/provider.dart';
 
 import '../../functions/dynamic_size_calculator.dart';
 import '../../functions/resize_string.dart';
 import '../../models/movie.dart';
+import '../../providers/profileData.dart';
 import '../../screens/details_page.dart';
 import 'genre.dart';
 import 'imdb.dart';
@@ -89,6 +91,10 @@ class _MovieCardState extends State<MovieCard> {
                         right: cardsWidth / 12,
                         child: GestureDetector(
                           onTap: () {
+                            Provider.of<ProfileProvider>(context, listen: false)
+                                .addToFavorite(widget.movie);
+
+                            // provider ile favoriler listene ekle
                             toggleFavorite();
                           },
                           child: Icon(
