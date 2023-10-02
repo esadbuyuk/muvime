@@ -2,7 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:muvime/providers/profileData.dart';
-import 'package:muvime/screens/home_page.dart';
+import 'package:muvime/screens/login_page.dart';
 import 'package:provider/provider.dart';
 
 import 'Datas/my_constants.dart';
@@ -53,7 +53,7 @@ class MyApp extends StatelessWidget {
           Theme.of(context).textTheme,
         ),
       ),
-      home: const HomePage(),
+      home: ProfileLoginPage(),
     );
   }
 }

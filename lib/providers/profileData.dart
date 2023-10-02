@@ -16,8 +16,8 @@ class Profile {
     String? password,
   }) {
     _photo = photo;
-    _username = username ?? "SerkanKonakci"; // Varsayılan kullanıcı adı
-    _password = password ?? "Parola123"; // Varsayılan parola
+    _username = username ?? "esad"; // Varsayılan kullanıcı adı
+    _password = password ?? "1"; // Varsayılan parola
   }
 
   File? get photo => _photo;
@@ -48,7 +48,7 @@ class Profile {
 }
 
 class ProfileProvider extends ChangeNotifier {
-  Profile _profile = Profile(photo: null, username: "SerkanKonakci");
+  Profile _profile = Profile(photo: null, username: "esad", password: "1");
 
   Profile get profile => _profile;
 

@@ -12,7 +12,6 @@ import '../main.dart';
 class ProfileSettingsPage extends StatefulWidget {
   const ProfileSettingsPage({super.key, required this.changeUserButton});
   final Function changeUserButton;
-  // final File? defaultPhoto;
 
   @override
   State<ProfileSettingsPage> createState() => _ProfileSettingsPageState();
@@ -23,11 +22,28 @@ class _ProfileSettingsPageState extends State<ProfileSettingsPage> {
 
   @override
   Widget build(BuildContext context) {
+    Future<void> getImageFromGallery() async {
+      final imagePicker = ImagePicker();
+      final image = await imagePicker.pickImage(source: ImageSource.gallery);
+      late File file;
+
+      if (image != null) {
+        file = File(image.path);
+        // Artık "file" bir File nesnesi ve kullanabilirsiniz.
+        widget.changeUserButton(file);
+      } else {
+        // Kullanıcı dosya seçmedi veya bir hata oluştu.
+      }
+
+      setState(() {
+        _image = file;
+      });
+    }
+
     Future<void> getImageFromCamera() async {
       final imagePicker = ImagePicker();
       final image = await imagePicker.pickImage(source: ImageSource.camera);
       late File file;
-      // _image = Provider.of<ProfileProvider>(context).profile.photo;
 
       if (image != null) {
         file = File(image.path);
@@ -43,7 +59,7 @@ class _ProfileSettingsPageState extends State<ProfileSettingsPage> {
       });
     }
 
-    void _showBottomSheet(BuildContext context) {
+    void languageBottomSheet(BuildContext context) {
       showModalBottomSheet(
         context: context,
         builder: (BuildContext context) {
@@ -59,9 +75,11 @@ class _ProfileSettingsPageState extends State<ProfileSettingsPage> {
                       context.setLocale(
                         newLocale,
                       );
-                      Navigator.of(context).pushReplacement(MaterialPageRoute(
-                        builder: (context) => MyApp(),
-                      ));
+                      Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(
+                          builder: (context) => MyApp(),
+                        ),
+                      );
                     }
 
                     changeLanguage(context, Locale("en", "US"));
@@ -75,17 +93,43 @@ class _ProfileSettingsPageState extends State<ProfileSettingsPage> {
                       context.setLocale(
                         newLocale,
                       );
-                      Navigator.of(context).pushReplacement(MaterialPageRoute(
-                        builder: (context) => MyApp(),
-                      ));
+                      Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(
+                          builder: (context) => MyApp(),
+                        ),
+                      );
                     }
 
                     changeLanguage(context, Locale("tr", "TR"));
                   },
                 ),
-                // Diğer seçenekler buraya eklenebilir.
               ],
             ),
+          );
+        },
+      );
+    }
+
+    void changeImageBottomSheet(BuildContext context) {
+      showModalBottomSheet(
+        context: context,
+        builder: (BuildContext context) {
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              ListTile(
+                title: const Text('Get Image From Camera'),
+                onTap: () {
+                  getImageFromCamera();
+                },
+              ),
+              ListTile(
+                title: const Text('Get image From Gallery'),
+                onTap: () {
+                  getImageFromGallery();
+                },
+              ),
+            ],
           );
         },
       );
@@ -131,7 +175,7 @@ class _ProfileSettingsPageState extends State<ProfileSettingsPage> {
                 bottom: 35,
                 child: GestureDetector(
                   onTap: () {
-                    getImageFromCamera();
+                    changeImageBottomSheet(context);
                   },
                   child: TakePhotoButton(buttonColor: buttonColor),
                 ),
@@ -159,24 +203,33 @@ class _ProfileSettingsPageState extends State<ProfileSettingsPage> {
 
           GestureDetector(
             onTap: () {
-              _showBottomSheet(context);
-              // void changeLanguage(BuildContext context, Locale newLocale) {
-              //   context.setLocale(
-              //     newLocale,
-              //   );
-              //   Navigator.of(context).pushReplacement(MaterialPageRoute(
-              //     builder: (context) => MyApp(),
-              //   ));
-              // }
-              //
-              // // changeLanguage(context, Locale("tr", "TR"));
-              // changeLanguage(context, Locale("en", "US"));
+              languageBottomSheet(context);
             },
             child: MyButton(
               text: "language_text".tr(),
               color: buttonColor,
             ),
-          ), // İstediğiniz boşluk
+          ),
+          SizedBox(
+            height: dynamicHeight(context, 0.04),
+          ),
+          GestureDetector(
+            onTap: () {
+              void changeLanguage(BuildContext context) {
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(
+                    builder: (context) => MyApp(),
+                  ),
+                );
+              }
+
+              changeLanguage(context);
+            },
+            child: MyButton(
+              text: "log_out_text".tr(),
+              color: buttonColor,
+            ),
+          ),
         ],
       ),
     );
@@ -186,7 +239,7 @@ class _ProfileSettingsPageState extends State<ProfileSettingsPage> {
     return Row(
       children: [
         Icon(icon),
-        SizedBox(width: 10.0),
+        const SizedBox(width: 10.0),
         Text(text),
       ],
     );
